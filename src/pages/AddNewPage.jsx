@@ -44,6 +44,8 @@ const AddNewPage = () => {
     fetchData();
   }, []);
 
+  function handleEdit(addNew) {}
+
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
       <form
@@ -101,17 +103,6 @@ const AddNewPage = () => {
           Add
         </button>
       </form>
-
-      {/* <div className="mt-8 w-full max-w-md space-y-4">
-        {addNew.map((item) => (
-          <div key={item.id} className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-gray-800">
-              {item.title}
-            </h3>
-            <p className="text-gray-600 mt-2">{item.description}</p>
-          </div>
-        ))}
-      </div> */}
     </div>
   );
 };
