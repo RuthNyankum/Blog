@@ -1,7 +1,119 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+// import { useNavigate } from 'react-router';
+
+const API_URL = 'http://localhost:5000/addNew';
 
 const AddNewPage = () => {
-  return <div>AddNewPage</div>;
+  const [addNew, setAddNew] = useState([]);
+  const [form, setForm] = useState({
+    title: '',
+    description: '',
+  });
+
+  //   const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const { title, description } = form;
+
+    if (!title || !description) return;
+    try {
+      const response = await axios.post(API_URL, form);
+      //   navigate('/blog');
+      setAddNew((prev) => [...prev, response.data]);
+    } catch (error) {
+      console.log(error);
+    }
+    setForm({ title: '', description: '' });
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(API_URL);
+        setAddNew(response.data);
+        setForm({
+          title: '',
+          description: '',
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+      <form
+        className="bg-[#0B394B] p-6 md:p-8 rounded-xl shadow-md w-full max-w-md"
+        onSubmit={handleSubmit}
+      >
+        <h2 className="text-2xl font-semibold mb-6 text-[#67E8F9]">
+          Add New Page
+        </h2>
+
+        <div className="mb-7">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-[#67E8F9] mb-1"
+          >
+            Title
+          </label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            placeholder="Enter Title"
+            value={form.title}
+            onChange={(event) =>
+              setForm((prev) => ({ ...prev, title: event.target.value }))
+            }
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none text-white"
+          />
+        </div>
+
+        <div className="mb-7">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-[#67E8F9] mb-1"
+          >
+            Description
+          </label>
+          <textarea
+            name="description"
+            id="description"
+            placeholder="Enter description"
+            rows="4"
+            value={form.description}
+            onChange={(event) =>
+              setForm((prev) => ({ ...prev, description: event.target.value }))
+            }
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none text-white"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-[#20617a] text-white py-2 px-4 rounded-lg hover:bg-[#52b2be] transition duration-200"
+        >
+          Add
+        </button>
+      </form>
+
+      {/* <div className="mt-8 w-full max-w-md space-y-4">
+        {addNew.map((item) => (
+          <div key={item.id} className="bg-white p-4 rounded-lg shadow-md">
+            <h3 className="text-lg font-semibold text-gray-800">
+              {item.title}
+            </h3>
+            <p className="text-gray-600 mt-2">{item.description}</p>
+          </div>
+        ))}
+      </div> */}
+    </div>
+  );
 };
 
 export default AddNewPage;
