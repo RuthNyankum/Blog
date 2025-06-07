@@ -1,112 +1,3 @@
-// import axios from 'axios';
-// import React, { useEffect, useState } from 'react';
-// const API_URL = 'http://localhost:5000/addNew';
-
-// const BlogPage = () => {
-//   const [addNew, setAddNew] = useState([]);
-//   const [selectedBlog, setSelectedBlog] = useState(null);
-//   const [editForm, setEditForm] = useState({ title: '', description: '' });
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await axios.get(API_URL);
-//         setAddNew(response.data);
-//       } catch (error) {
-//         console.log(error);
-//       }
-//     };
-//     fetchData();
-//   }, []);
-
-//   function handleEdit(post) {
-//     // TODO: Implement edit functionality
-//     console.log('Edit clicked for:', post);
-//   }
-
-//   function handleDelete(postId) {
-//     // TODO: Implement delete functionality
-//     console.log('Delete clicked for ID:', postId);
-//   }
-
-//   return (
-//     <>
-//       <main className="flex flex-col lg:flex-row gap-6 mt-8 px-4 md:px-8 lg:px-16">
-//         {/* Blog List Section */}
-//         <div className="w-full lg:max-w-md space-y-4">
-//           {addNew.map((item) => (
-//             <div
-//               key={item.id}
-//               className="bg-white p-4 rounded-lg shadow-md hover:bg-gray-50 transition"
-//             >
-//               {/* Title with inline buttons */}
-//               <div className="flex justify-between items-center mb-2">
-//                 <h3
-//                   onClick={() => setSelectedBlog(item)}
-//                   className="text-lg font-semibold text-gray-800 cursor-pointer hover:text-blue-600 flex-1 mr-2"
-//                 >
-//                   {item.title}
-//                 </h3>
-
-//                 {/* Inline Action Buttons */}
-//                 <div className="flex gap-2 flex-shrink-0">
-//                   <button
-//                     onClick={(e) => {
-//                       e.stopPropagation();
-//                       handleEdit(item);
-//                     }}
-//                     className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition"
-//                   >
-//                     Edit
-//                   </button>
-//                   <button
-//                     onClick={(e) => {
-//                       e.stopPropagation();
-//                       handleDelete(item.id);
-//                     }}
-//                     className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition"
-//                   >
-//                     Delete
-//                   </button>
-//                 </div>
-//               </div>
-
-//               {/* Description */}
-//               <p
-//                 onClick={() => setSelectedBlog(item)}
-//                 className="text-gray-600 line-clamp-1 cursor-pointer"
-//               >
-//                 {item.description}
-//               </p>
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* Selected Blog Section */}
-//         <div className="w-full flex-1 bg-white rounded-lg shadow-md p-6">
-//           {selectedBlog ? (
-//             <>
-//               <h2 className="text-2xl font-bold mb-4 text-gray-800">
-//                 {selectedBlog.title}
-//               </h2>
-//               <p className="text-gray-700">{selectedBlog.description}</p>
-//             </>
-//           ) : (
-//             <div className="text-center text-gray-400 italic">
-//               <p>No post selected yet.</p>
-//               <p className="mt-2">
-//                 Click on a post from the left to view full content here.
-//               </p>
-//             </div>
-//           )}
-//         </div>
-//       </main>
-//     </>
-//   );
-// };
-
-// export default BlogPage;
-
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 const API_URL = 'http://localhost:5000/addNew';
@@ -176,6 +67,37 @@ const BlogPage = () => {
       console.log('Cannot delete user:', error);
     }
   }
+
+  const toggleFavorite = async (postId) => {
+    try {
+      const post = addNew.find((item) => item.id === postId);
+      // const updatedPost = { ...post, isFavorite: !post.isFavorite };
+
+      // correct field name
+      const response = await axios.patch(`${API_URL}/${postId}`, {
+        isFavorite: !post.isFavorite,
+      });
+
+      // Update local state
+      setAddNew((prev) =>
+        prev.map((item) =>
+          item.id === postId
+            ? { ...item, isFavorite: response.data.isFavorite }
+            : item
+        )
+      );
+
+      // Update selected blog if applicable
+      if (selectedBlog?.id === postId) {
+        setSelectedBlog((prev) => ({
+          ...prev,
+          isFavorite: response.data.isFavorite,
+        }));
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
 
   return (
     <>
@@ -322,5 +244,3 @@ const BlogPage = () => {
 };
 
 export default BlogPage;
-
-//CONTINUE TO INTERGRATE FAVOURITE

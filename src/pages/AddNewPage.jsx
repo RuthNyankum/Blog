@@ -44,8 +44,6 @@ const AddNewPage = () => {
     fetchData();
   }, []);
 
-  function handleEdit(addNew) {}
-
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
       <form
@@ -53,7 +51,7 @@ const AddNewPage = () => {
         onSubmit={handleSubmit}
       >
         <h2 className="text-2xl font-semibold mb-6 text-[#67E8F9]">
-          Add New Page
+          Add New Blog
         </h2>
 
         <div className="mb-7">
