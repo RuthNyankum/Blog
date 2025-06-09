@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 const API_URL = 'http://localhost:5000/addNew';
 
@@ -11,7 +11,7 @@ const AddNewPage = () => {
     description: '',
   });
 
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -19,8 +19,14 @@ const AddNewPage = () => {
 
     if (!title || !description) return;
     try {
-      const response = await axios.post(API_URL, form);
-      //   navigate('/blog');
+      //set isFavorite to false for new posts
+      const postData = {
+        ...form,
+        isFavorite: false,
+      };
+
+      const response = await axios.post(API_URL, postData);
+      navigate('/blog');
       setAddNew((prev) => [...prev, response.data]);
     } catch (error) {
       console.log(error);
@@ -45,9 +51,9 @@ const AddNewPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
       <form
-        className="bg-[#0B394B] p-6 md:p-8 rounded-xl shadow-md w-full max-w-md"
+        className="bg-[#0B394B] p-6 md:p-8 rounded-xl shadow-md w-full max-w-xl min-h-[500px]"
         onSubmit={handleSubmit}
       >
         <h2 className="text-2xl font-semibold mb-6 text-[#67E8F9]">
@@ -85,7 +91,7 @@ const AddNewPage = () => {
             name="description"
             id="description"
             placeholder="Enter description"
-            rows="4"
+            rows="6"
             value={form.description}
             onChange={(event) =>
               setForm((prev) => ({ ...prev, description: event.target.value }))

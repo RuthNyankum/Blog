@@ -32,7 +32,7 @@ const BlogPage = () => {
     e.preventDefault();
 
     try {
-      // Make API call to update the post
+      // API call to update the post
       const response = await axios.put(`${API_URL}/${editingId}`, editForm);
 
       // Update the local state with the edited post
@@ -73,7 +73,6 @@ const BlogPage = () => {
       const post = addNew.find((item) => item.id === postId);
       // const updatedPost = { ...post, isFavorite: !post.isFavorite };
 
-      // correct field name
       const response = await axios.patch(`${API_URL}/${postId}`, {
         isFavorite: !post.isFavorite,
       });
@@ -87,7 +86,7 @@ const BlogPage = () => {
         )
       );
 
-      // Update selected blog if applicable
+      // Update selected blog if applicable by using id
       if (selectedBlog?.id === postId) {
         setSelectedBlog((prev) => ({
           ...prev,
@@ -101,13 +100,16 @@ const BlogPage = () => {
 
   return (
     <>
-      <main className="flex flex-col lg:flex-row gap-6 mt-8 px-4 md:px-8 lg:px-16">
+      <main className="flex flex-col lg:flex-row gap-6 px-4 md:px-8 lg:px-16 min-h-screen bg-gray-900">
         {/* Blog List Section */}
-        <div className="w-full lg:w-1/2 space-y-4">
+        <div className="w-full lg:w-1/2 space-y-4 mt-8">
           {addNew.map((item) => (
             <div
               key={item.id}
               className="bg-white p-4 rounded-lg shadow-md hover:bg-gray-50 transition"
+              style={{
+                boxShadow: '0 4px 6px rgba(103, 232, 249, 0.6)',
+              }}
             >
               {editingId === item.id ? (
                 // Show edit form
@@ -221,7 +223,7 @@ const BlogPage = () => {
         </div>
 
         {/* Selected Blog Section */}
-        <div className="w-full lg:w-1/2 bg-white rounded-lg shadow-md p-6">
+        <div className="w-full lg:w-1/2 bg-white rounded-lg shadow-md p-6 mt-8">
           {selectedBlog ? (
             <>
               <h2 className="text-2xl font-bold mb-4 text-gray-800">
